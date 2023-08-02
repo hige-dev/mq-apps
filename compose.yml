@@ -1,0 +1,53 @@
+services:
+  # nginx-lb:
+  # app-pub:
+  rabbitmq:
+    image: rabbitmq:3.12.2-management-alpine
+    container_name: rabbitmq
+    ports:
+      - 5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=password
+    volumes:
+      - mq-volume:/var/lib/rabbitmq
+    networks:
+      - mq-pub-nw
+      - mq-sub-nw
+  # app-sub:
+  postgres:
+    image: postgres:13
+    container_name: pg13
+    # ports:
+    #   - 5432
+    environment:
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - db-mgmt-nw
+      - app-db-nw
+  pgadmin:
+    image: dpage/pgadmin4:7.5
+    container_name: pgadmin4
+    ports:
+      - 5050:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=asd@asd.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    depends_on:
+      - postgres
+    networks:
+      - db-mgmt-nw
+
+networks:
+  mq-pub-nw:
+  mq-sub-nw:
+  db-mgmt-nw:
+  app-db-nw:
+
+volumes:
+  mq-volume:
+  db-volume:

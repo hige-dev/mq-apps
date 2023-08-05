@@ -1,6 +1,15 @@
 services:
   # nginx-lb:
-  # app-pub:
+  app-pub:
+    image: python:3.10-alpine
+    container_name: app-pub
+    tty: true
+    stdin_open: true
+    networks:
+      - mq-pub-nw
+      - app-db-nw
+    volumes:
+      - ./app:/app
   rabbitmq:
     image: rabbitmq:3.12.2-management-alpine
     container_name: rabbitmq
@@ -15,7 +24,16 @@ services:
     networks:
       - mq-pub-nw
       - mq-sub-nw
-  # app-sub:
+  app-sub:
+    image: python:3.10-alpine
+    container_name: app-sub
+    tty: true
+    stdin_open: true
+    networks:
+      - mq-sub-nw
+      - app-db-nw
+    volumes:
+      - ./app:/app
   postgres:
     image: postgres:13
     container_name: pg13

@@ -5,6 +5,8 @@ services:
     container_name: app-pub
     tty: true
     stdin_open: true
+    ports:
+      - 5000:5000
     networks:
       - mq-pub-nw
       - app-db-nw

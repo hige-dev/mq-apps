@@ -1,7 +1,10 @@
 import psycopg2
+import sys
 from configparser import ConfigParser
+import time
+import random
 
-class Database:
+class Database():
     def __init__(self, filename='db/dbconfig.ini', section='postgresql'):
         self.__config(filename, section)
 
@@ -27,7 +30,10 @@ class Database:
         else:
             raise Exception('Section {0} not found in the {1} file'.format(section, filename))
 
-    def __execute(self, sql):
+    def execute(self, sql):
+        self.__connect()
+        # 計測用
+        time.sleep(random.uniform(0,3))
         try:
             self.__cursor.execute(sql)
             self.__connection.commit()
@@ -35,16 +41,13 @@ class Database:
             print(e)
             self.__connection.rollback()
 
-    def select_all(self):
-        self.__connect()
-        sql = 'select * from users'
-        self.__execute(sql)
-        res = self.__cursor.fetchall()
-        self.__close()
-        return res
-
-    def insert_user(self, name):
-        self.__connect()
-        sql = f'insert into users (name) values (\'{name}\')'
-        self.execute(sql)
-        self.__close()
+        if sql.upper().startswith('SELECT'):
+            res = self.__cursor.fetchall()
+            self.__close()
+            return res
+        elif sql.upper().startswith('INSERT'):
+            self.__close()
+        else:
+            print('invalid sql.')
+            self.__close()
+            sys.exit(1)

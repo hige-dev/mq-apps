@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import pika
-import db.database as dba
+from db import database
 
 class RabbitMQ():
     def __init__(self):
@@ -23,7 +23,7 @@ class RabbitMQ():
         ch.basic_ack(delivery_tag = method.delivery_tag)
 
     def __db_query_exec(self, sql):
-        db = dba.Database()
+        db = database.Database()
         db.execute(sql)
 
     def consume(self):
@@ -38,3 +38,6 @@ class RabbitMQ():
 
         channel.start_consuming()
 
+if __name__ == '__main__':
+    mq = RabbitMQ()
+    mq.consume()

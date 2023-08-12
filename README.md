@@ -11,9 +11,3 @@ password = ...
 EOF
 fi
 ```
-
-```bash
-apk add --no-cache build-base postgresql-dev
-cd /app
-python -m pip install -r requirements.txt
-```

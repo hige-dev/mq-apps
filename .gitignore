@@ -1,2 +1,3 @@
-app/db/dbconfig.ini
-app/*/__pycache__/*
+db/dbconfig.ini
+*/__pycache__/*
+*/*/__pycache__/*

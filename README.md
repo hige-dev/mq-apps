@@ -1,3 +1,4 @@
+![](./sample.drawio.svg)
 
 ```bash
 if [ ! -f app/db/dbconfig.ini ]; then
